@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 검색</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+</head>
+<body>
+
+<!-- 왼쪽 사이드바 토글 버튼 (모바일용) -->
+<button id="left-sidebar-toggle" class="left-sidebar-toggle">→</button>
+
+<!-- 왼쪽 사이드바 -->
+<div class="sidebar">
+    <form method="get" action="{{ url_for('car_listings') }}">
+
+        <!-- 추가 검색 옵션 섹션 -->
+        <div class="additional-filters">
+            <div class="section-header">
+                <h3> 검색 옵션</h3>
+            </div>
+            <div class="filters" id="additional-filters-section">
+                <!-- 연식 필터 -->
+                <div class="filter">
+                    <label for="year-from">연식:</label>
+                    <div class="select-subgroup">
+                        <select id="year-from" name="min_year">
+                            <option value="">최소</option>
+                            {% for year in range(1995, 2025) %}
+                            <option value="{{ year }}">{{ year }}년</option>
+                            {% endfor %}
+                        </select>
+                        <span>~</span>
+                        <select id="year-to" name="max_year">
+                            <option value="">최대</option>
+                            {% for year in range(1995, 2025) %}
+                            <option value="{{ year }}">{{ year }}년</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <p> </p>
+                <!-- 주행 거리 필터 -->
+                <div class="filter">
+                    <label for="mileage-from">주행 거리 (km):</label>
+                    <div class="select-subgroup">
+                        <select id="mileage-from" name="min_mileage">
+                            <option value="">최소</option>
+                            {% for mileage in range(0, 100001, 10000) %}
+                            <option value="{{ mileage }}">{{ "{:,}".format(mileage) }} km</option>
+                            {% endfor %}
+                        </select>
+                        <span>~</span>
+                        <select id="mileage-to" name="max_mileage">
+                            <option value="">최대</option>
+                            {% for mileage in range(0, 100001, 10000) %}
+                            <option value="{{ mileage }}">{{ "{:,}".format(mileage) }} km</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- 색상 필터 섹션 수정 -->
+<div class="color-filter-section">
+    <div class="section-header">
+        <h3>색상 선택</h3>
+    </div>
+    <div class="color-filter">
+        <!-- 기본 색상 (회색, 진주색, 검정색, 쥐색, 은색, 은회색) -->
+        {% set initial_colors = ['회색', '진주색', '검정색', '쥐색', '은색', '은회색'] %}
+        {% for c in initial_colors %}
+        <div class="color-option color-{{ c }}" data-color="{{ c }}" aria-label="{{ c }}" title="{{ c }}">
+            <span class="color-box"></span>
+            <!-- {{ c }} 텍스트 제거됨 -->
+        </div>
+        {% endfor %}
+
+        <!-- 추가 색상, 초기에는 숨김 -->
+        <div class="additional-colors">
+            {% for c in color %}
+                {% if c not in initial_colors %}
+                <div class="color-option color-{{ c }}" data-color="{{ c }}" aria-label="{{ c }}" title="{{ c }}">
+                    <span class="color-box"></span>
+                    <!-- {{ c }} 텍스트 제거됨 -->
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- 더 보기 버튼 -->
+        <button type="button" id="toggle-colors" class="toggle-colors-button">더 보기</button>
+    </div>
+
+    <!-- 숨겨진 입력 필드: 선택된 색상을 저장 -->
+    <div id="selected-colors-inputs" style="display: none;">
+        {% for c in selected_colors %}
+        <input type="hidden" name="color" value="{{ c }}">
+        {% endfor %}
+    </div>
+</div>
+        <!-- 제조사 선택 섹션 -->
+        <div class="section-header">
+            <h3>제조사 선택</h3>
+        </div>
+        <div class="filters" id="manufacturer-section">
+
+<!-- 국내차 카테고리 -->
+<div class="category-filter">
+    <input type="checkbox" id="domestic-cars" name="category" value="국내차" {% if '국내차' in manufacturers %}checked{% endif %}>
+    <label for="domestic-cars">국내차</label>
+    <div id="domestic-manufacturers" class="category-manufacturers" style="display: none;">
+                    <!-- 현대 제조사 필터 -->
+                    <div class="manufacturer-filter">
+                        <input type="checkbox" id="hyundai-checkbox" name="manufacturer" value="현대" {% if '현대' in manufacturers %}checked{% endif %}>
+                        <label for="hyundai-checkbox">현대</label>
+                        <div class="model-filters" id="hyundai-models">
+                            {% for manufacturer, models in models_by_manufacturer.items() %}
+                                {% if manufacturer == '현대' %}
+                                    {% for model in models %}
+                                        <div>
+                                            <input type="checkbox" id="hyundai-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                                            <label for="hyundai-{{ loop.index }}">{{ model }}</label>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 기아 제조사 필터 -->
+                    <div class="manufacturer-filter">
+                        <input type="checkbox" id="kia-checkbox" name="manufacturer" value="기아" {% if '기아' in manufacturers %}checked{% endif %}>
+                        <label for="kia-checkbox">기아</label>
+                        <div class="model-filters" id="kia-models">
+                            {% for manufacturer, models in models_by_manufacturer.items() %}
+                                {% if manufacturer == '기아' %}
+                                    {% for model in models %}
+                                        <div>
+                                            <input type="checkbox" id="kia-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                                            <label for="kia-{{ loop.index }}">{{ model }}</label>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 쉐보레 제조사 필터 -->
+                    <div class="manufacturer-filter">
+                        <input type="checkbox" id="chevrolet-checkbox" name="manufacturer" value="쉐보레" {% if '쉐보레' in manufacturers %}checked{% endif %}>
+                        <label for="chevrolet-checkbox">쉐보레</label>
+                        <div class="model-filters" id="chevrolet-models">
+                            {% for manufacturer, models in models_by_manufacturer.items() %}
+                                {% if manufacturer == '쉐보레(GM대우)' %}
+                                    {% for model in models %}
+                                        <div>
+                                            <input type="checkbox" id="chevrolet-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                                            <label for="chevrolet-{{ loop.index }}">{{ model }}</label>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 쌍용 제조사 필터 -->
+                    <div class="manufacturer-filter">
+                        <input type="checkbox" id="ssangyong-checkbox" name="manufacturer" value="쌍용" {% if '쌍용' in manufacturers %}checked{% endif %}>
+                        <label for="ssangyong-checkbox">쌍용</label>
+                        <div class="model-filters" id="ssangyong-models">
+                            {% for manufacturer, models in models_by_manufacturer.items() %}
+                                {% if manufacturer == '르노코리아(삼성)' %}
+                                    {% for model in models %}
+                                        <div>
+                                            <input type="checkbox" id="ssangyong-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                                            <label for="ssangyong-{{ loop.index }}">{{ model }}</label>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 제네시스 제조사 필터 -->
+                    <div class="manufacturer-filter">
+                        <input type="checkbox" id="genesis-checkbox" name="manufacturer" value="제네시스" {% if '제네시스' in manufacturers %}checked{% endif %}>
+                        <label for="genesis-checkbox">제네시스</label>
+                        <div class="model-filters" id="genesis-models">
+                            {% for manufacturer, models in models_by_manufacturer.items() %}
+                                {% if manufacturer == '제네시스' %}
+                                    {% for model in models %}
+                                        <div>
+                                            <input type="checkbox" id="genesis-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                                            <label for="genesis-{{ loop.index }}">{{ model }}</label>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<!-- 국가별 최상위 카테고리 -->
+<div class="manufacturer-filters">
+    {% for category, manufacturers_dict in models_by_outcountry.items() %}
+    <div class="category-filter">
+        <!-- 국가별 체크박스 -->
+        <input type="checkbox" id="{{ category }}-checkbox" name="category" value="{{ category }}" {% if category in manufacturers %}checked{% endif %}>
+        <label for="{{ category }}-checkbox">{{ category }}</label>
+
+        <!-- 제조사 목록 -->
+        <div class="category-manufacturers" id="{{ category }}-manufacturers" style="display: none;">
+            {% for manufacturer, models in manufacturers_dict.items() %}
+            <div class="manufacturer-filter">
+                <input type="checkbox" id="{{ category }}-{{ manufacturer }}-checkbox" name="manufacturer" value="{{ manufacturer }}" {% if manufacturer in manufacturers %}checked{% endif %}>
+                <label for="{{ category }}-{{ manufacturer }}-checkbox">{{ manufacturer }}</label>
+
+                <!-- 모델 목록 -->
+                <div class="model-filters" id="{{ category }}-{{ manufacturer }}-models" style="display: none;">
+                    {% for model in models %}
+                    <div>
+                        <input type="checkbox" id="{{ category }}-{{ manufacturer }}-model-{{ loop.index }}" name="model" value="{{ model }}" {% if model in selected_models %}checked{% endif %}>
+                        <label for="{{ category }}-{{ manufacturer }}-model-{{ loop.index }}">{{ model }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- 검색 버튼 -->
+            <div id="floating-search-button" class="floating-search-button">
+                <button type="submit" class="search-button">검색</button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+
+<!-- 우측 사이드바 토글 버튼 -->
+<button id="right-sidebar-toggle" class="sidebar-toggle">←</button>
+
+<!-- 우측 사이드바 -->
+<div id="right-sidebar" class="right-sidebar">
+    <h3>찜 목록</h3>
+    <div class="wishlist-content">
+        <ul id="wishlist-items">
+           <!-- 찜 목록 아이템이 여기에 동적으로 추가됩니다 -->
+        </ul>
+    </div>
+</div>
+
+<!-- 로딩 스피너 -->
+<div id="loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="content">
+    <!-- 제목 섹션 -->
+    <div class="title-section">
+        <a href="/" class="title-link">
+            <div class="title-wrapper">
+                <img src="static/images/car-search-icon.png" alt="차찾자 아이콘" class="title-icon">
+                <h1 class="title">차찾자</h1>
+            </div>
+        </a>
+    </div>
+
+    <!-- 검색 바 -->
+    <div class="search-bar" style="position: relative;">
+        <i class="fas fa-search search-icon"></i>
+        <form method="get" action="/">
+            <input type="text" name="search" placeholder="차량 모델 검색" aria-label="차량 모델 검색">
+        </form>
+    </div>
+
+    <div class="car-listing" id="car-listing">
+        {% for car in car_list %}
+        <div class="car-card" data-manufacturer="{{ car.manufacturer }}" data-model="{{ car.model }}" data-id="{{ car.id }}">
+            {% if car.image %}
+            <div class="car-image-container" style="position: relative;">
+                <img src="{{ car.image }}" alt="{{ car.model }}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 20px;" />
+                <!-- 찜 버튼 추가 -->
+                <button class="wishlist-button"
+                    data-id="{{ car.id }}"
+                    data-title="{{ car.manufacturer }} {{ car.model }}"
+                    data-year="{{ car.year }}"
+                    data-mileage="{{ car.mileage }}"
+                    data-price="{{ car.price }}"
+                    data-detail-url="http://www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&listAdvType=pic&carid={{ car.id }}"
+                    data-inspection-url="http://www.encar.com/md/sl/mdsl_regcar.do?method=inspectionViewNew&carid={{ car.id }}"
+                    data-calc-url="/result?car_id={{ car.id }}"
+                    data-image-url="{{ car.image }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 48 48" style="fill:#FA5252;">
+                        <path d="M 15 3 C 12.250484 3 10 5.2504839 10 8 L 10 45 A 1.0001 1.0001 0 0 0 11.609375 45.792969 L 25.904297 34.796875 A 1.0006638 1.0006638 0 1 0 24.683594 33.210938 L 12 42.96875 L 12 8 C 12 6.3315161 13.331516 5 15 5 L 33 5 C 34.668484 5 36 6.3315161 36 8 L 36 42.96875 L 27.681641 36.570312 A 1.0001 1.0001 0 1 0 26.462891 38.15625 L 36.390625 45.792969 A 1.0001 1.0001 0 0 0 38 45 L 38 8 C 38 5.2504839 35.749516 3 33 3 L 15 3 z"></path>
+                    </svg>
+                </button>
+            </div>
+            <hr class="card-line">
+            {% endif %}
+            <div class="car-title">{{ car.manufacturer }} {{ car.model }}</div>
+            <div class="car-badge">{{ car.badge }}</div>
+            <div class="car-info">{{ car.year }}년식 | {{ car.mileage }} | 색상: {{ car.color }}</div>
+            <hr class="card-line">
+            <div class="price">{{ car.price }}</div>
+            <div class="buttons">
+                <a href="http://www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&listAdvType=pic&carid={{ car.id }}&view_type=hs_ad&wtClick_korList=015&advClickPosition=kor_pic_p1_g1" target="_blank" class="button">상세 정보</a>
+                <a href="http://www.encar.com/md/sl/mdsl_regcar.do?method=inspectionViewNew&carid={{ car.id }}&wtClick_carview=015" target="_blank" class="button">검사 정보</a>
+                <a href="/result?car_id={{ car.id }}" class="button calc-button">가격 예측</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination" id="pagination">
+    {% if page > 1 %}
+    <!-- 첫 페이지로 이동 -->
+    <a href="?page=1&search={{ search_query }}{% if manufacturers %}&manufacturer={{ manufacturers|join('&manufacturer=') }}{% endif %}{% if selected_models %}&model={{ selected_models|join('&model=') }}{% endif %}&min_mileage={{ min_mileage }}&max_mileage={{ max_mileage }}&min_year={{ min_year }}&max_year={{ max_year }}{% for c in selected_colors %}&color={{ c }}{% endfor %}#car-listing">&lt;&lt;</a>
+    <!-- 이전 페이지로 이동 -->
+    <a href="?page={{ page - 1 }}&search={{ search_query }}{% if manufacturers %}&manufacturer={{ manufacturers|join('&manufacturer=') }}{% endif %}{% if selected_models %}&model={{ selected_models|join('&model=') }}{% endif %}&min_mileage={{ min_mileage }}&max_mileage={{ max_mileage }}&min_year={{ min_year }}&max_year={{ max_year }}{% for c in selected_colors %}&color={{ c }}{% endfor %}#car-listing">&lt;</a>
+    {% endif %}
+
+    <!-- 페이지 번호 표시 -->
+    {% for p in page_range %}
+        {% if p == page %}
+        <span class="active">{{ p }}</span>
+        {% else %}
+        <a href="?page={{ p }}&search={{ search_query }}{% if manufacturers %}&manufacturer={{ manufacturers|join('&manufacturer=') }}{% endif %}{% if selected_models %}&model={{ selected_models|join('&model=') }}{% endif %}&min_mileage={{ min_mileage }}&max_mileage={{ max_mileage }}&min_year={{ min_year }}&max_year={{ max_year }}{% for c in selected_colors %}&color={{ c }}{% endfor %}#car-listing">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page < total_pages %}
+    <!-- 다음 페이지로 이동 -->
+    <a href="?page={{ page + 1 }}&search={{ search_query }}{% if manufacturers %}&manufacturer={{ manufacturers|join('&manufacturer=') }}{% endif %}{% if selected_models %}&model={{ selected_models|join('&model=') }}{% endif %}&min_mileage={{ min_mileage }}&max_mileage={{ max_mileage }}&min_year={{ min_year }}&max_year={{ max_year }}{% for c in selected_colors %}&color={{ c }}{% endfor %}#car-listing">&gt;</a>
+    <!-- 마지막 페이지로 이동 -->
+    <a href="?page={{ total_pages }}&search={{ search_query }}{% if manufacturers %}&manufacturer={{ manufacturers|join('&manufacturer=') }}{% endif %}{% if selected_models %}&model={{ selected_models|join('&model=') }}{% endif %}&min_mileage={{ min_mileage }}&max_mileage={{ max_mileage }}&min_year={{ min_year }}&max_year={{ max_year }}{% for c in selected_colors %}&color={{ c }}{% endfor %}#car-listing">&gt;&gt;</a>
+    {% endif %}
+
+    <!-- 페이지 입력 폼 추가 -->
+    <form action="" method="get" class="pagination-form">
+        <input type="number" name="page" min="1" max="{{ total_pages }}" placeholder="페이지">
+        <button type="submit">이동</button>
+        {% if search_query %}
+        <input type="hidden" name="search" value="{{ search_query }}">
+        {% endif %}
+        {% if manufacturers %}
+        <input type="hidden" name="manufacturer" value="{{ manufacturers|join('&manufacturer=') }}">
+        {% endif %}
+        {% if selected_models %}
+        <input type="hidden" name="model" value="{{ selected_models|join('&model=') }}">
+        {% endif %}
+        {% for c in selected_colors %}
+        <input type="hidden" name="color" value="{{ c }}">
+        {% endfor %}
+    </form>
+</div>
+
+</div>
+
+<script src="static/js/script.js"></script>
+</body>
+</html>

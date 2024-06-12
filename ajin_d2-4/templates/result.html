@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>차량 정보 결과</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/result_styles.css">
+</head>
+<body>
+    <!-- 제목 섹션 -->
+    <div class="title-section">
+        <a href="/" class="title-link">
+            <div class="title-wrapper">
+                <img src="static/images/car-search-icon.png" alt="차찾자 아이콘" class="title-icon">
+                <h1 class="title">차찾자</h1>
+            </div>
+        </a>
+    </div>
+
+    <!-- 차량 정보 카드들 -->
+    <div class="container">
+        <!-- 왼쪽 카드: 예측 결과 -->
+        <div class="left-card">
+            <div class="card pricing-card">
+                <div class="card-header">예측 결과</div>
+                <div class="card-body">
+                    <div class="section">
+                        <h5>기본 정보</h5>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th><i class="fas fa-car"></i> 차량명</th>
+                                    <td>{{ name }}</td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-gas-pump"></i> 연료 타입</th>
+                                    <td>{{ fuel_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-cogs"></i> 변속기</th>
+                                    <td>{{ transmission }}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <h5>가격 정보</h5>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th><i class="fas fa-tag"></i> 예상 가격</th>
+                                    <td><span class="highlight green">{{ price }} 만원</span></td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-dollar-sign"></i> 실제 가격</th>
+                                    <td>
+                                        {% if real_price > price %}
+                                            <span class="highlight red">{{ real_price }} 만원</span>
+                                        {% else %}
+                                            <span class="highlight green">{{ real_price }} 만원</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-chart-line"></i> 가격 비교</th>
+                                    <td>
+                                        {% if real_price < price %}
+                                            <span class="highlight green">예상 가격보다 저렴합니다.</span>
+                                        {% else %}
+                                            <span class="highlight red">예상 가격보다 비쌉니다.</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- 오른쪽 카드: 상세 정보 -->
+<div class="right-card">
+        <div class="card-header">ai 딜러 총평</div>
+        <div class="card-body">
+                <p>{{ text|safe }}</p>
+            </div>
+        </div>
+    </div>
+
+   <!-- 버튼 섹션 -->
+    <div class="button-group">
+        <a href="/" class="home-button"><i class="fas fa-home"></i> 홈으로 돌아가기</a>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
