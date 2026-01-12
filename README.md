@@ -6,31 +6,31 @@
 ![Selenium](https://img.shields.io/badge/Selenium-Web_Crawling-43B02A?style=flat&logo=selenium&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=flat&logo=sqlite&logoColor=white)
 
-## 📖 Project Overview
+## Project Overview
 **'차찾자'**는 중고차 시장의 고질적인 문제인 **정보 비대칭성**을 해결하기 위해 개발된 서비스입니다.
 
 중고차 구매 경험이 부족한 사용자는 복잡한 성능 기록부와 차량 상태를 보고 합리적인 가격인지 판단하기 어렵습니다. 본 프로젝트는 **머신러닝(Random Forest)을 통해 적정 중고차 가격을 예측**하고, **생성형 AI(GPT-4o)를 활용해 복잡한 차량 정보를 알기 쉽게 요약**해줌으로써 사용자의 합리적인 구매 결정을 돕습니다.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 1. 💰 AI 중고차 가격 예측
+### 1. AI 중고차 가격 예측
 - 차량의 제원(연식, 주행거리, 연료 등)과 성능 기록부 데이터를 분석하여 **적정 시세**를 예측합니다.
 - 사용자가 보고 있는 매물이 예측 가격보다 비싼지 저렴한지 직관적으로 알려줍니다.
 
-### 2. 🤖 AI 딜러 총평 (GPT-4o)
+### 2. AI 딜러 총평 (GPT-4o)
 - 복잡한 성능 기록부와 차량 상태 데이터를 **OpenAI GPT-4o** 모델에 입력하여, 마치 전문가가 조언하듯 **차량의 장단점과 구매 추천 여부**를 요약해줍니다.
 
-### 3. 🔍 맞춤형 검색 및 필터
+### 3. 맞춤형 검색 및 필터
 - 제조사, 모델, 연식, 주행거리 등 다양한 조건으로 차량을 검색하고 찜 목록(Wishlist)으로 관리할 수 있습니다.
 
-### 4. 🕸️ 데이터 자동 수집 파이프라인
+### 4. 데이터 자동 수집 파이프라인
 - **Encar API**와 **Web Crawling(Selenium)**을 결합하여 차량 기본 정보와 상세 성능 기록부를 자동으로 수집하고 DB화합니다.
 
 ---
 
-## 🛠️ System Architecture
+## System Architecture
 
 | 구성 요소 | 기술 스택 | 설명 |
 | :--- | :--- | :--- |
@@ -42,7 +42,7 @@
 
 ---
 
-## 📊 Data & Modeling (Core Tech)
+## Data & Modeling (Core Tech)
 
 ### 1. 데이터 수집 및 전처리
 - **Source:** 엔카(Encar) API 및 웹 사이트
@@ -56,7 +56,7 @@
 ### 3. 모델 성능 개선 결과
 데이터 증강 전후의 **MSE(Mean Squared Error)** 비교 결과, 오차율이 획기적으로 감소하였습니다.
 - **증강 전 MSE:** 485,596
-- **증강 후 MSE:** **39,049** (약 12배 성능 향상 📉)
+- **증강 후 MSE:** **39,049** (약 12배 성능 향상)
 
 ### 4. 모델 선정 이유
 - **선형 회귀(Linear Regression)**보다 비선형적인 패턴 학습에 유리하고, **SVM**보다 대용량 데이터 처리에 적합한 **Random Forest** 알고리즘을 채택하였습니다.
@@ -64,7 +64,7 @@
 
 ---
 
-📦 secondhand_car
+secondhand_car
 ```
  ├── 📂 static           # CSS, JS, 이미지 등 정적 파일 관리
  ├── 📂 templates        # Jinja2 기반 HTML 템플릿 파일
@@ -78,7 +78,7 @@
 ```
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 | 메인 화면 & 검색 | AI 예측 결과 & 딜러 총평 |
 | :---: | :---: |
@@ -88,12 +88,12 @@
 
 ---
 
-## 📝 Future Work
+## Future Work
 - **데이터 파이프라인 자동화:** 주 1회 수동 업데이트 방식을 스케줄링을 통한 실시간 데이터 수집 시스템으로 개선
 - **속도 최적화:** GPT-4o 생성 속도 및 추론 시간을 단축하기 위해 예측 결과 캐싱(Caching) 도입
 - **개인화 추천:** 사용자 행동 로그를 기반으로 한 정교한 추천 알고리즘 적용
 
 ---
 
-## 📜 License
+## License
 This project is for educational purposes.
