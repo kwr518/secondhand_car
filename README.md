@@ -82,7 +82,7 @@
 
 | 메인 화면 & 검색 | AI 예측 결과 & 딜러 총평 |
 | :---: | :---: |
-| ![Main Screen](https://github.com/user-attachments/assets/b03517e2-ae03-41eb-b182-e943535bc10e) | ![AI Result](https://via.placeholder.com/400x300?text=Insert+AI+Result+Image) |
+| ![Main Screen](https://github.com/user-attachments/assets/b03517e2-ae03-41eb-b182-e943535bc10e) | ![AI Result](https://github.com/user-attachments/assets/dbe9d375-9959-4d3c-88ab-667aeab6b16c) |
 | *다양한 조건으로 차량 검색* | *적정 시세 분석 및 GPT-4o 요약* |
 *(위 이미지 영역에 실제 구현 화면 캡처를 넣어주세요)*
 
