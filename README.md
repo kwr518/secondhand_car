@@ -65,6 +65,7 @@
 ---
 
 📦 secondhand_car
+```
  ├── 📂 static           # CSS, JS, 이미지 등 정적 파일 관리
  ├── 📂 templates        # Jinja2 기반 HTML 템플릿 파일
  ├── 📄 main.py          # Flask 애플리케이션 실행 및 엔드포인트 관리
@@ -74,7 +75,7 @@
  ├── 📄 gan.py           # (Experimental) GAN을 활용한 합성 데이터 생성 실험
  ├── 📄 conversion.py    # 데이터 전처리, 인코딩 및 형식 변환 유틸리티
  └── 📄 .gitignore       # Git 버전 관리 제외 대상 설정
-
+```
 ---
 
 ## 📸 Screenshots
