@@ -66,7 +66,7 @@
 
 ## 📂 Directory Structure (Inferred)
 📦 secondhand_car 
-  ├── 📂 static # CSS, JS, 이미지 등 정적 파일 
+<br/>├── 📂 static # CSS, JS, 이미지 등 정적 파일 
   ├── 📂 templates # 웹 페이지 HTML 템플릿 
   ├── 📄 main.py # 웹 애플리케이션 실행 메인 파일 (Flask App) 
   ├── 📄 new_ml.py # Random Forest 모델 학습 및 1차 튜닝 코드 
