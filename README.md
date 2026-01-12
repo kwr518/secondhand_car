@@ -67,14 +67,14 @@
 ## 📂 Directory Structure (Inferred)
 📦 secondhand_car 
 <br/>├── 📂 static # CSS, JS, 이미지 등 정적 파일 
-  ├── 📂 templates # 웹 페이지 HTML 템플릿 
-  ├── 📄 main.py # 웹 애플리케이션 실행 메인 파일 (Flask App) 
-  ├── 📄 new_ml.py # Random Forest 모델 학습 및 1차 튜닝 코드 
-  ├── 📄 new_ml2.py # 모델 성능 개선 및 재학습 코드 
-  ├── 📄 noise.py # 데이터 증강(Data Augmentation) 로직 (노이즈 주입) 
-  ├── 📄 gan.py # (실험적) GAN 기반 데이터 생성 스크립트 
-  ├── 📄 conversion.py # 데이터 전처리 및 형식 변환 유틸리티 
-  └── 📄 .gitignore # Git 제외 파일 목록
+<br/>├── 📂 templates # 웹 페이지 HTML 템플릿 
+<br/>├── 📄 main.py # 웹 애플리케이션 실행 메인 파일 (Flask App) 
+<br/>├── 📄 new_ml.py # Random Forest 모델 학습 및 1차 튜닝 코드 
+<br/>├── 📄 new_ml2.py # 모델 성능 개선 및 재학습 코드 
+<br/>├── 📄 noise.py # 데이터 증강(Data Augmentation) 로직 (노이즈 주입) 
+<br/>├── 📄 gan.py # (실험적) GAN 기반 데이터 생성 스크립트 
+<br/>├── 📄 conversion.py # 데이터 전처리 및 형식 변환 유틸리티 
+<br/>└── 📄 .gitignore # Git 제외 파일 목록
 
 ---
 
